@@ -1,0 +1,2532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#6c5ce7">
+<link rel="manifest" href="manifest.json">
+
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<title>InventarisKu</title>
+
+<style>
+:root{
+    --primary:#6c5ce7;
+    --primary2:#8e7cff;
+    --bg:#f5f6fb;
+    --card:#ffffff;
+    --text:#202124;
+    --muted:#777b87;
+    --border:#e8e9ef;
+    --danger:#ef476f;
+    --warning:#ffb703;
+    --success:#06d6a0;
+    --shadow:0 10px 30px rgba(32,33,36,.07);
+    --radius:20px;
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+}
+
+button,input,select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+    border:0;
+}
+
+.app{
+    display:flex;
+    min-height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+    width:250px;
+    background:var(--card);
+    border-right:1px solid var(--border);
+    padding:25px 16px;
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+    z-index:50;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:5px 10px 35px;
+}
+
+.logo-icon{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--primary),var(--primary2));
+    color:white;
+    font-size:21px;
+    box-shadow:0 8px 20px rgba(108,92,231,.25);
+}
+
+.logo h2{
+    font-size:20px;
+}
+
+.logo small{
+    display:block;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:2px;
+}
+
+.nav{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.nav button{
+    width:100%;
+    padding:14px 15px;
+    background:transparent;
+    color:var(--muted);
+    text-align:left;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    gap:13px;
+    transition:.2s;
+}
+
+.nav button:hover{
+    background:#f3f1ff;
+    color:var(--primary);
+}
+
+.nav button.active{
+    background:linear-gradient(90deg,#eeeaff,#f7f6ff);
+    color:var(--primary);
+    font-weight:700;
+}
+
+.nav-icon{
+    width:24px;
+    text-align:center;
+    font-size:18px;
+}
+
+/* MAIN */
+
+.main{
+    margin-left:250px;
+    width:calc(100% - 250px);
+    padding:30px;
+}
+
+.page{
+    display:none;
+    animation:fade .25s ease;
+}
+
+.page.active{
+    display:block;
+}
+
+@keyframes fade{
+    from{
+        opacity:0;
+        transform:translateY(8px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* HEADER */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:28px;
+}
+
+.greeting h1{
+    font-size:28px;
+    margin-bottom:5px;
+}
+
+.greeting p{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.profile{
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),#b3a7ff);
+    color:white;
+    display:grid;
+    place-items:center;
+    font-weight:800;
+}
+
+/* STATS */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.stat{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:21px;
+    box-shadow:var(--shadow);
+    transition:.25s;
+}
+
+.stat:hover{
+    transform:translateY(-3px);
+}
+
+.stat-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stat-icon{
+    width:43px;
+    height:43px;
+    border-radius:13px;
+    display:grid;
+    place-items:center;
+    background:#f0edff;
+    color:var(--primary);
+    font-size:20px;
+}
+
+.stat h3{
+    font-size:27px;
+    margin-top:15px;
+}
+
+.stat p{
+    color:var(--muted);
+    font-size:13px;
+    margin-top:4px;
+}
+
+/* CONTENT GRID */
+
+.grid{
+    display:grid;
+    grid-template-columns:1.4fr .8fr;
+    gap:20px;
+}
+
+.panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:22px;
+    box-shadow:var(--shadow);
+}
+
+.panel-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.panel-title h2{
+    font-size:17px;
+}
+
+.link{
+    color:var(--primary);
+    font-size:13px;
+    font-weight:700;
+    background:none;
+}
+
+/* PRODUCT */
+
+.product-list{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+
+.product{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    transition:.2s;
+}
+
+.product:hover{
+    border-color:#d6d0ff;
+    background:#faf9ff;
+}
+
+.product-icon{
+    width:44px;
+    height:44px;
+    border-radius:13px;
+    background:#f1efff;
+    display:grid;
+    place-items:center;
+    font-size:19px;
+}
+
+.product-info{
+    flex:1;
+}
+
+.product-info strong{
+    font-size:14px;
+}
+
+.product-info small{
+    display:block;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.stock{
+    font-weight:800;
+    font-size:13px;
+}
+
+.stock.low{
+    color:var(--danger);
+}
+
+.stock.ok{
+    color:var(--success);
+}
+
+/* WARNING */
+
+.warning{
+    display:flex;
+    align-items:flex-start;
+    gap:13px;
+    padding:14px;
+    border-radius:15px;
+    background:#fff7df;
+    border:1px solid #ffe8a1;
+    margin-bottom:10px;
+}
+
+.warning-icon{
+    font-size:21px;
+}
+
+.warning strong{
+    font-size:14px;
+}
+
+.warning p{
+    color:#8c7428;
+    font-size:12px;
+    margin-top:3px;
+}
+
+/* SEARCH */
+
+.toolbar{
+    display:flex;
+    gap:12px;
+    margin-bottom:20px;
+}
+
+.search{
+    position:relative;
+    flex:1;
+}
+
+.search span{
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#999;
+}
+
+.search input,
+select,
+.form-input{
+    width:100%;
+    padding:13px 14px;
+    border:1px solid var(--border);
+    border-radius:14px;
+    background:var(--card);
+    color:var(--text);
+    outline:none;
+}
+
+.search input{
+    padding-left:43px;
+}
+
+.search input:focus,
+select:focus,
+.form-input:focus{
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(108,92,231,.1);
+}
+
+/* BUTTON */
+
+.btn{
+    padding:13px 17px;
+    border-radius:14px;
+    background:var(--primary);
+    color:white;
+    font-weight:700;
+    box-shadow:0 7px 18px rgba(108,92,231,.2);
+    transition:.2s;
+}
+
+.btn:hover{
+    transform:translateY(-2px);
+    background:#5c4bd5;
+}
+
+.btn.secondary{
+    background:#f0eff7;
+    color:var(--text);
+    box-shadow:none;
+}
+
+.btn.danger{
+    background:#ffe8ee;
+    color:var(--danger);
+    box-shadow:none;
+}
+
+/* ITEMS */
+
+.items{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:17px;
+}
+
+.item{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:20px;
+    padding:18px;
+    box-shadow:var(--shadow);
+    transition:.25s;
+}
+
+.item:hover{
+    transform:translateY(-4px);
+    box-shadow:0 15px 35px rgba(32,33,36,.1);
+}
+
+.item-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+}
+
+.item-icon{
+    width:50px;
+    height:50px;
+    border-radius:15px;
+    background:linear-gradient(135deg,#eeeaff,#f7f6ff);
+    display:grid;
+    place-items:center;
+    font-size:22px;
+}
+
+.badge{
+    padding:6px 9px;
+    border-radius:8px;
+    background:#edf9f5;
+    color:#00a77c;
+    font-size:10px;
+    font-weight:800;
+}
+
+.badge.low{
+    background:#fff0f3;
+    color:var(--danger);
+}
+
+.item h3{
+    margin-top:15px;
+    font-size:16px;
+}
+
+.item-code{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:5px;
+}
+
+.item-meta{
+    display:flex;
+    justify-content:space-between;
+    margin-top:18px;
+    padding-top:14px;
+    border-top:1px solid var(--border);
+}
+
+.item-meta small{
+    display:block;
+    color:var(--muted);
+    margin-bottom:4px;
+}
+
+.item-meta strong{
+    font-size:14px;
+}
+
+.item-actions{
+    display:flex;
+    gap:8px;
+    margin-top:15px;
+}
+
+.item-actions button{
+    flex:1;
+    padding:9px;
+    border-radius:10px;
+    font-size:12px;
+    font-weight:700;
+}
+
+.edit{
+    background:#efedff;
+    color:var(--primary);
+}
+
+.delete{
+    background:#fff0f3;
+    color:var(--danger);
+}
+
+.stock-btn{
+    background:#eafbf6;
+    color:#00a77c;
+}
+
+/* TRANSACTION */
+
+.transaction{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:14px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.transaction:last-child{
+    border-bottom:0;
+}
+
+.trans-icon{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    display:grid;
+    place-items:center;
+}
+
+.trans-in{
+    background:#eafbf6;
+    color:#00a77c;
+}
+
+.trans-out{
+    background:#fff0f3;
+    color:var(--danger);
+}
+
+.trans-info{
+    flex:1;
+}
+
+.trans-info strong{
+    font-size:13px;
+}
+
+.trans-info small{
+    display:block;
+    color:var(--muted);
+    margin-top:3px;
+}
+
+.trans-amount{
+    font-weight:800;
+}
+
+/* SETTINGS */
+
+.setting{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 0;
+    border-bottom:1px solid var(--border);
+}
+
+.setting:last-child{
+    border-bottom:0;
+}
+
+.setting strong{
+    font-size:14px;
+}
+
+.setting small{
+    display:block;
+    color:var(--muted);
+    margin-top:4px;
+}
+
+.switch{
+    width:48px;
+    height:27px;
+    background:#ddd;
+    border-radius:20px;
+    padding:3px;
+    transition:.2s;
+}
+
+.switch.active{
+    background:var(--primary);
+}
+
+.switch span{
+    width:21px;
+    height:21px;
+    background:white;
+    display:block;
+    border-radius:50%;
+    transition:.2s;
+}
+
+.switch.active span{
+    transform:translateX(21px);
+}
+
+/* MODAL */
+
+.modal-bg{
+    position:fixed;
+    inset:0;
+    background:rgba(10,10,20,.55);
+    backdrop-filter:blur(5px);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    padding:20px;
+}
+
+.modal-bg.show{
+    display:flex;
+}
+
+.modal{
+    width:100%;
+    max-width:520px;
+    max-height:90vh;
+    overflow:auto;
+    background:var(--card);
+    border-radius:24px;
+    padding:25px;
+    animation:modal .2s ease;
+}
+
+@keyframes modal{
+    from{
+        opacity:0;
+        transform:scale(.95) translateY(10px);
+    }
+    to{
+        opacity:1;
+        transform:scale(1) translateY(0);
+    }
+}
+
+.modal-head{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:22px;
+}
+
+.close{
+    width:35px;
+    height:35px;
+    border-radius:10px;
+    background:#f1f1f4;
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+.form-group label{
+    display:block;
+    font-size:12px;
+    font-weight:700;
+    margin-bottom:7px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+}
+
+.modal-actions{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.modal-actions button{
+    flex:1;
+}
+
+/* EMPTY */
+
+.empty{
+    text-align:center;
+    padding:50px 20px;
+    color:var(--muted);
+}
+
+.empty-icon{
+    font-size:45px;
+    margin-bottom:12px;
+}
+
+.empty h3{
+    color:var(--text);
+    margin-bottom:5px;
+}
+
+/* TOAST */
+
+.toast{
+    position:fixed;
+    right:25px;
+    bottom:25px;
+    background:#202124;
+    color:white;
+    padding:13px 17px;
+    border-radius:13px;
+    opacity:0;
+    transform:translateY(20px);
+    pointer-events:none;
+    transition:.3s;
+    z-index:300;
+    font-size:13px;
+}
+
+.toast.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* FAB */
+
+.fab{
+    display:none;
+}
+
+/* MOBILE NAV */
+
+.bottom-nav{
+    display:none;
+}
+
+/* DARK MODE */
+
+body.dark{
+    --bg:#111218;
+    --card:#191a21;
+    --text:#f4f4f6;
+    --muted:#9699a6;
+    --border:#292b35;
+    --shadow:0 10px 30px rgba(0,0,0,.2);
+}
+
+body.dark .sidebar{
+    background:#16171d;
+}
+
+body.dark .nav button:hover{
+    background:#20202a;
+}
+
+body.dark .nav button.active{
+    background:#252238;
+}
+
+body.dark .product:hover{
+    background:#20202a;
+}
+
+body.dark .search input,
+body.dark select,
+body.dark .form-input{
+    background:#191a21;
+}
+
+body.dark .btn.secondary{
+    background:#292a32;
+    color:white;
+}
+
+body.dark .close{
+    background:#292a32;
+    color:white;
+}
+
+body.dark .warning{
+    background:#2b2617;
+    border-color:#4b401d;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1100px){
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .items{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:750px){
+
+    .sidebar{
+        display:none;
+    }
+
+    .main{
+        margin-left:0;
+        width:100%;
+        padding:20px 16px 90px;
+    }
+
+    .topbar{
+        margin-bottom:20px;
+    }
+
+    .greeting h1{
+        font-size:23px;
+    }
+
+    .stats{
+        grid-template-columns:1fr 1fr;
+        gap:11px;
+    }
+
+    .stat{
+        padding:16px;
+    }
+
+    .stat h3{
+        font-size:22px;
+    }
+
+    .stat-icon{
+        width:37px;
+        height:37px;
+    }
+
+    .grid{
+        gap:14px;
+    }
+
+    .panel{
+        padding:17px;
+        border-radius:17px;
+    }
+
+    .items{
+        grid-template-columns:1fr;
+    }
+
+    .toolbar{
+        flex-direction:column;
+    }
+
+    .toolbar .btn{
+        width:100%;
+    }
+
+    .fab{
+        display:grid;
+        place-items:center;
+        position:fixed;
+        right:20px;
+        bottom:76px;
+        width:57px;
+        height:57px;
+        border-radius:18px;
+        background:linear-gradient(135deg,var(--primary),var(--primary2));
+        color:white;
+        font-size:25px;
+        box-shadow:0 10px 25px rgba(108,92,231,.35);
+        z-index:40;
+    }
+
+    .bottom-nav{
+        display:flex;
+        position:fixed;
+        bottom:0;
+        left:0;
+        right:0;
+        height:65px;
+        background:rgba(255,255,255,.94);
+        backdrop-filter:blur(15px);
+        border-top:1px solid var(--border);
+        z-index:50;
+        justify-content:space-around;
+        padding:5px;
+    }
+
+    body.dark .bottom-nav{
+        background:rgba(25,26,33,.94);
+    }
+
+    .bottom-nav button{
+        background:none;
+        color:var(--muted);
+        width:25%;
+        font-size:10px;
+        font-weight:600;
+    }
+
+    .bottom-nav button span{
+        display:block;
+        font-size:19px;
+        margin-bottom:2px;
+    }
+
+    .bottom-nav button.active{
+        color:var(--primary);
+    }
+
+    .profile{
+        width:40px;
+        height:40px;
+    }
+}
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", () => {
+
+        navigator.serviceWorker
+            .register("./sw.js")
+            .then(() => {
+                console.log("InventarisKu PWA aktif.");
+            })
+            .catch(error => {
+                console.error(
+                    "Service Worker gagal:",
+                    error
+                );
+            });
+
+    });
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">📦</div>
+        <div>
+            <h2>InventarisKu</h2>
+            <small>Management System</small>
+        </div>
+    </div>
+
+    <nav class="nav">
+
+        <button class="active" onclick="bukaHalaman('dashboard',this)">
+            <span class="nav-icon">🏠</span>
+            Dashboard
+        </button>
+
+        <button onclick="bukaHalaman('barang',this)">
+            <span class="nav-icon">📦</span>
+            Data Barang
+        </button>
+
+        <button onclick="bukaHalaman('riwayat',this)">
+            <span class="nav-icon">🔄</span>
+            Riwayat
+        </button>
+
+        <button onclick="bukaHalaman('pengaturan',this)">
+            <span class="nav-icon">⚙️</span>
+            Pengaturan
+        </button>
+
+    </nav>
+
+</aside>
+
+
+<main class="main">
+
+<!-- DASHBOARD -->
+
+<section id="dashboard" class="page active">
+
+    <div class="topbar">
+
+        <div class="greeting">
+            <h1>Welcome</h1>
+            <p>Kelola inventaris kamu dengan mudah.</p>
+        </div>
+
+        <div class="profile">A</div>
+
+    </div>
+
+
+    <div class="stats">
+
+        <div class="stat">
+            <div class="stat-head">
+                <span>Total Barang</span>
+                <div class="stat-icon">📦</div>
+            </div>
+            <h3 id="totalBarang">0</h3>
+            <p>Jenis barang</p>
+        </div>
+
+        <div class="stat">
+            <div class="stat-head">
+                <span>Total Stok</span>
+                <div class="stat-icon">📊</div>
+            </div>
+            <h3 id="totalStok">0</h3>
+            <p>Unit tersedia</p>
+        </div>
+
+        <div class="stat">
+            <div class="stat-head">
+                <span>Nilai Aset</span>
+                <div class="stat-icon">💰</div>
+            </div>
+            <h3 id="totalNilai">Rp0</h3>
+            <p>Estimasi inventaris</p>
+        </div>
+
+        <div class="stat">
+            <div class="stat-head">
+                <span>Stok Menipis</span>
+                <div class="stat-icon">⚠️</div>
+            </div>
+            <h3 id="stokMenipis">0</h3>
+            <p>Perlu diperiksa</p>
+        </div>
+
+    </div>
+
+
+    <div class="grid">
+
+        <div class="panel">
+
+            <div class="panel-title">
+                <h2>Barang Terbaru</h2>
+                <button class="link" onclick="bukaHalaman('barang')">
+                    Lihat semua
+                </button>
+            </div>
+
+            <div id="barangTerbaru" class="product-list"></div>
+
+        </div>
+
+
+        <div class="panel">
+
+            <div class="panel-title">
+                <h2>⚠️ Perhatian</h2>
+            </div>
+
+            <div id="peringatan"></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- BARANG -->
+
+<section id="barang" class="page">
+
+    <div class="topbar">
+
+        <div class="greeting">
+            <h1>Data Barang</h1>
+            <p>Kelola seluruh inventaris kamu.</p>
+        </div>
+
+        <button class="btn" onclick="bukaModalTambah()">
+            + Tambah Barang
+        </button>
+
+    </div>
+
+
+    <div class="toolbar">
+
+        <div class="search">
+            <span>🔎</span>
+            <input
+                id="search"
+                type="text"
+                placeholder="Cari nama atau kode barang..."
+                oninput="tampilkanBarang()"
+            >
+        </div>
+
+        <select id="filterKategori" onchange="tampilkanBarang()">
+            <option value="">Semua kategori</option>
+        </select>
+
+    </div>
+
+
+    <div id="daftarBarang" class="items"></div>
+
+</section>
+
+
+<!-- RIWAYAT -->
+
+<section id="riwayat" class="page">
+
+    <div class="topbar">
+
+        <div class="greeting">
+            <h1>Riwayat Transaksi</h1>
+            <p>Catatan perubahan stok barang.</p>
+        </div>
+
+        <button class="btn danger" onclick="hapusRiwayat()">
+            Hapus Riwayat
+        </button>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div id="daftarRiwayat"></div>
+
+    </div>
+
+</section>
+
+
+<!-- PENGATURAN -->
+
+<section id="pengaturan" class="page">
+
+    <div class="topbar">
+
+        <div class="greeting">
+            <h1>Pengaturan</h1>
+            <p>Atur aplikasi dan data inventaris.</p>
+        </div>
+
+    </div>
+
+
+    <div class="panel">
+
+        <div class="setting">
+
+            <div>
+                <strong>🌙 Mode Gelap</strong>
+                <small>Gunakan tampilan gelap.</small>
+            </div>
+
+            <button class="switch" id="darkSwitch" onclick="toggleDarkMode()">
+                <span></span>
+            </button>
+
+        </div>
+
+
+        <div class="setting">
+
+            <div>
+                <strong>💾 Backup Data</strong>
+                <small>Simpan data inventaris ke file JSON.</small>
+            </div>
+
+            <button class="btn secondary" onclick="backupData()">
+                Backup
+            </button>
+
+        </div>
+
+
+        <div class="setting">
+
+            <div>
+                <strong>📥 Import Data</strong>
+                <small>Masukkan kembali backup JSON.</small>
+            </div>
+
+            <button class="btn secondary" onclick="document.getElementById('importFile').click()">
+                Import
+            </button>
+
+            <input
+                type="file"
+                id="importFile"
+                accept=".json"
+                hidden
+                onchange="importData(event)"
+            >
+
+        </div>
+
+
+        <div class="setting">
+
+            <div>
+                <strong>⚠️ Reset Data</strong>
+                <small>Hapus seluruh data inventaris.</small>
+            </div>
+
+            <button class="btn danger" onclick="resetData()">
+                Reset
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+</div>
+
+
+<!-- BOTTOM NAV -->
+
+<nav class="bottom-nav">
+
+    <button class="active" onclick="bukaHalaman('dashboard',this)">
+        <span>🏠</span>
+        Home
+    </button>
+
+    <button onclick="bukaHalaman('barang',this)">
+        <span>📦</span>
+        Barang
+    </button>
+
+    <button onclick="bukaHalaman('riwayat',this)">
+        <span>🔄</span>
+        Riwayat
+    </button>
+
+    <button onclick="bukaHalaman('pengaturan',this)">
+        <span>⚙️</span>
+        Setting
+    </button>
+
+</nav>
+
+
+<!-- FAB -->
+
+<button class="fab" onclick="bukaModalTambah()">+</button>
+
+
+<!-- MODAL BARANG -->
+
+<div class="modal-bg" id="modalBarang">
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <div>
+                <h2 id="modalTitle">Tambah Barang</h2>
+                <p style="color:var(--muted);font-size:12px;margin-top:4px;">
+                    Masukkan informasi barang.
+                </p>
+            </div>
+
+            <button class="close" onclick="tutupModal()">✕</button>
+
+        </div>
+
+
+        <input type="hidden" id="editId">
+
+
+        <div class="form-group">
+            <label>Nama Barang</label>
+            <input class="form-input" id="nama" placeholder="Contoh: Laptop Lenovo">
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Kode Barang</label>
+                <input class="form-input" id="kode" placeholder="BRG001">
+            </div>
+
+            <div class="form-group">
+                <label>Kategori</label>
+                <input class="form-input" id="kategori" placeholder="Elektronik">
+            </div>
+
+        </div>
+
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Harga</label>
+                <input class="form-input" id="harga" type="number" placeholder="500000">
+            </div>
+
+            <div class="form-group">
+                <label>Stok</label>
+                <input class="form-input" id="stok" type="number" placeholder="10">
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <label>Minimum Stok</label>
+            <input class="form-input" id="minimum" type="number" value="2">
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button class="btn secondary" onclick="tutupModal()">
+                Batal
+            </button>
+
+            <button class="btn" onclick="simpanBarang()">
+                Simpan Barang
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- MODAL STOK -->
+
+<div class="modal-bg" id="modalStok">
+
+    <div class="modal">
+
+        <div class="modal-head">
+
+            <div>
+                <h2>Update Stok</h2>
+                <p id="stokBarangNama" style="color:var(--muted);font-size:12px;margin-top:4px;"></p>
+            </div>
+
+            <button class="close" onclick="tutupModalStok()">✕</button>
+
+        </div>
+
+
+        <input type="hidden" id="stokId">
+
+
+        <div class="form-group">
+
+            <label>Jenis Transaksi</label>
+
+            <select id="jenisStok">
+                <option value="Masuk">Barang Masuk</option>
+                <option value="Keluar">Barang Keluar</option>
+            </select>
+
+        </div>
+
+
+        <div class="form-group">
+
+            <label>Jumlah</label>
+
+            <input
+                class="form-input"
+                type="number"
+                id="jumlahStok"
+                min="1"
+                placeholder="Jumlah"
+            >
+
+        </div>
+
+
+        <div class="modal-actions">
+
+            <button class="btn secondary" onclick="tutupModalStok()">
+                Batal
+            </button>
+
+            <button class="btn" onclick="prosesStok()">
+                Simpan
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+
+<script>
+
+/* =========================
+   DATA
+========================= */
+
+let barang = JSON.parse(localStorage.getItem("barang")) || [];
+let riwayat = JSON.parse(localStorage.getItem("riwayat")) || [];
+
+
+/* =========================
+   SAVE
+========================= */
+
+function simpanSemuaData(){
+
+    localStorage.setItem(
+        "barang",
+        JSON.stringify(barang)
+    );
+
+    localStorage.setItem(
+        "riwayat",
+        JSON.stringify(riwayat)
+    );
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function bukaHalaman(id, element){
+
+    document.querySelectorAll(".page").forEach(page=>{
+        page.classList.remove("active");
+    });
+
+    const target=document.getElementById(id);
+
+    if(target){
+        target.classList.add("active");
+    }
+
+
+    document.querySelectorAll(".nav button, .bottom-nav button")
+    .forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+
+    if(element){
+        element.classList.add("active");
+    }
+
+
+    document.querySelectorAll(".nav button, .bottom-nav button")
+    .forEach(btn=>{
+
+        const onclick=btn.getAttribute("onclick") || "";
+
+        if(onclick.includes("'" + id + "'")){
+            btn.classList.add("active");
+        }
+
+    });
+
+
+    window.scrollTo({
+        top:0,
+        behavior:"smooth"
+    });
+
+
+    if(id==="dashboard"){
+        updateDashboard();
+    }
+
+    if(id==="barang"){
+        updateKategori();
+        tampilkanBarang();
+    }
+
+    if(id==="riwayat"){
+        tampilkanRiwayat();
+    }
+
+}
+
+
+/* =========================
+   TOAST
+========================= */
+
+let toastTimer;
+
+function toast(message){
+
+    const el=document.getElementById("toast");
+
+    el.textContent=message;
+
+    el.classList.add("show");
+
+    clearTimeout(toastTimer);
+
+    toastTimer=setTimeout(()=>{
+        el.classList.remove("show");
+    },2200);
+
+}
+
+
+/* =========================
+   MODAL BARANG
+========================= */
+
+function bukaModalTambah(){
+
+    document.getElementById("modalTitle").textContent="Tambah Barang";
+
+    document.getElementById("editId").value="";
+
+    kosongkanForm();
+
+    document.getElementById("modalBarang").classList.add("show");
+
+}
+
+
+function tutupModal(){
+
+    document.getElementById("modalBarang").classList.remove("show");
+
+}
+
+
+function kosongkanForm(){
+
+    document.getElementById("nama").value="";
+    document.getElementById("kode").value="";
+    document.getElementById("kategori").value="";
+    document.getElementById("harga").value="";
+    document.getElementById("stok").value="";
+    document.getElementById("minimum").value="2";
+
+}
+
+
+/* =========================
+   SAVE BARANG
+========================= */
+
+function simpanBarang(){
+
+    const nama=document.getElementById("nama").value.trim();
+    const kode=document.getElementById("kode").value.trim();
+    const kategori=document.getElementById("kategori").value.trim();
+    const harga=Number(document.getElementById("harga").value);
+    const stok=Number(document.getElementById("stok").value);
+    const minimum=Number(document.getElementById("minimum").value);
+
+    if(!nama || !kode || !kategori){
+
+        toast("Lengkapi data barang dulu.");
+
+        return;
+    }
+
+
+    if(harga<0 || stok<0){
+
+        toast("Harga dan stok tidak valid.");
+
+        return;
+    }
+
+
+    const editId=document.getElementById("editId").value;
+
+
+    if(editId){
+
+        const index=barang.findIndex(
+            b=>String(b.id)===String(editId)
+        );
+
+
+        if(index!==-1){
+
+            barang[index].nama=nama;
+            barang[index].kode=kode;
+            barang[index].kategori=kategori;
+            barang[index].harga=harga;
+            barang[index].stok=stok;
+            barang[index].minimum=minimum;
+
+            toast("Barang berhasil diperbarui.");
+
+        }
+
+    }else{
+
+        barang.push({
+
+            id:Date.now(),
+
+            nama,
+
+            kode,
+
+            kategori,
+
+            harga,
+
+            stok,
+
+            minimum,
+
+            dibuat:new Date().toISOString()
+
+        });
+
+        toast("Barang berhasil ditambahkan.");
+
+    }
+
+
+    simpanSemuaData();
+
+    tutupModal();
+
+    updateKategori();
+
+    tampilkanBarang();
+
+    updateDashboard();
+
+}
+
+
+/* =========================
+   EDIT
+========================= */
+
+function editBarang(id){
+
+    const b=barang.find(
+        item=>String(item.id)===String(id)
+    );
+
+    if(!b)return;
+
+
+    document.getElementById("modalTitle").textContent="Edit Barang";
+
+    document.getElementById("editId").value=b.id;
+
+    document.getElementById("nama").value=b.nama;
+
+    document.getElementById("kode").value=b.kode;
+
+    document.getElementById("kategori").value=b.kategori;
+
+    document.getElementById("harga").value=b.harga;
+
+    document.getElementById("stok").value=b.stok;
+
+    document.getElementById("minimum").value=b.minimum;
+
+
+    document.getElementById("modalBarang").classList.add("show");
+
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+function hapusBarang(id){
+
+    const b=barang.find(
+        item=>String(item.id)===String(id)
+    );
+
+    if(!b)return;
+
+
+    if(!confirm(`Hapus barang "${b.nama}"?`)){
+        return;
+    }
+
+
+    barang=barang.filter(
+        item=>String(item.id)!==String(id)
+    );
+
+
+    simpanSemuaData();
+
+    tampilkanBarang();
+
+    updateDashboard();
+
+    updateKategori();
+
+    toast("Barang dihapus.");
+
+}
+
+
+/* =========================
+   FORMAT RUPIAH
+========================= */
+
+function rupiah(value){
+
+    return new Intl.NumberFormat(
+        "id-ID",
+        {
+            style:"currency",
+            currency:"IDR",
+            maximumFractionDigits:0
+        }
+    ).format(value || 0);
+
+}
+
+
+/* =========================
+   BARANG
+========================= */
+
+function tampilkanBarang(){
+
+    const container=document.getElementById("daftarBarang");
+
+    const search=
+        (document.getElementById("search")?.value || "")
+        .toLowerCase();
+
+    const filter=
+        document.getElementById("filterKategori")?.value || "";
+
+
+    const hasil=barang.filter(b=>{
+
+        const cocokSearch=
+            b.nama.toLowerCase().includes(search) ||
+            b.kode.toLowerCase().includes(search);
+
+        const cocokKategori=
+            !filter || b.kategori===filter;
+
+        return cocokSearch && cocokKategori;
+
+    });
+
+
+    if(hasil.length===0){
+
+        container.innerHTML=`
+
+            <div class="panel" style="grid-column:1/-1">
+
+                <div class="empty">
+
+                    <div class="empty-icon">📦</div>
+
+                    <h3>Belum ada barang</h3>
+
+                    <p>Tambahkan barang untuk mulai mengelola inventaris.</p>
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML=hasil.map(b=>{
+
+        const low=b.stok<=b.minimum;
+
+        return `
+
+        <div class="item">
+
+            <div class="item-top">
+
+                <div class="item-icon">
+                    📦
+                </div>
+
+                <span class="badge ${low ? "low":""}">
+                    ${low ? "STOK MENIPIS":"TERSEDIA"}
+                </span>
+
+            </div>
+
+
+            <h3>${escapeHTML(b.nama)}</h3>
+
+            <div class="item-code">
+                ${escapeHTML(b.kode)} • ${escapeHTML(b.kategori)}
+            </div>
+
+
+            <div class="item-meta">
+
+                <div>
+                    <small>Stok</small>
+                    <strong>${b.stok} unit</strong>
+                </div>
+
+                <div>
+                    <small>Harga</small>
+                    <strong>${rupiah(b.harga)}</strong>
+                </div>
+
+            </div>
+
+
+            <div class="item-actions">
+
+                <button
+                    class="stock-btn"
+                    onclick="bukaModalStok(${b.id})">
+                    ↕ Stok
+                </button>
+
+                <button
+                    class="edit"
+                    onclick="editBarang(${b.id})">
+                    Edit
+                </button>
+
+                <button
+                    class="delete"
+                    onclick="hapusBarang(${b.id})">
+                    Hapus
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+   KATEGORI
+========================= */
+
+function updateKategori(){
+
+    const select=document.getElementById("filterKategori");
+
+    if(!select)return;
+
+
+    const current=select.value;
+
+    const kategori=[
+        ...new Set(
+            barang.map(b=>b.kategori)
+        )
+    ].sort();
+
+
+    select.innerHTML=
+        `<option value="">Semua kategori</option>`+
+        kategori.map(k=>
+            `<option value="${escapeHTML(k)}">${escapeHTML(k)}</option>`
+        ).join("");
+
+
+    select.value=current;
+
+}
+
+
+/* =========================
+   MODAL STOK
+========================= */
+
+function bukaModalStok(id){
+
+    const b=barang.find(
+        item=>String(item.id)===String(id)
+    );
+
+    if(!b)return;
+
+
+    document.getElementById("stokId").value=b.id;
+
+    document.getElementById("stokBarangNama").textContent=
+        `${b.nama} • Stok saat ini ${b.stok} unit`;
+
+    document.getElementById("jumlahStok").value="";
+
+    document.getElementById("jenisStok").value="Masuk";
+
+
+    document.getElementById("modalStok")
+        .classList.add("show");
+
+}
+
+
+function tutupModalStok(){
+
+    document.getElementById("modalStok")
+        .classList.remove("show");
+
+}
+
+
+function prosesStok(){
+
+    const id=document.getElementById("stokId").value;
+
+    const jenis=document.getElementById("jenisStok").value;
+
+    const jumlah=Number(
+        document.getElementById("jumlahStok").value
+    );
+
+
+    if(jumlah<=0){
+
+        toast("Jumlah stok harus lebih dari 0.");
+
+        return;
+    }
+
+
+    const b=barang.find(
+        item=>String(item.id)===String(id)
+    );
+
+    if(!b)return;
+
+
+    if(jenis==="Keluar" && jumlah>b.stok){
+
+        toast("Stok tidak mencukupi.");
+
+        return;
+    }
+
+
+    if(jenis==="Masuk"){
+        b.stok+=jumlah;
+    }else{
+        b.stok-=jumlah;
+    }
+
+
+    riwayat.unshift({
+
+        id:Date.now(),
+
+        barang:b.nama,
+
+        kode:b.kode,
+
+        jenis,
+
+        jumlah,
+
+        tanggal:new Date().toISOString()
+
+    });
+
+
+    simpanSemuaData();
+
+    tutupModalStok();
+
+    tampilkanBarang();
+
+    tampilkanRiwayat();
+
+    updateDashboard();
+
+    toast(`Stok ${jenis.toLowerCase()} berhasil.`);
+
+}
+
+
+/* =========================
+   RIWAYAT
+========================= */
+
+function tampilkanRiwayat(){
+
+    const container=document.getElementById("daftarRiwayat");
+
+    if(!riwayat.length){
+
+        container.innerHTML=`
+
+            <div class="empty">
+
+                <div class="empty-icon">🔄</div>
+
+                <h3>Belum ada transaksi</h3>
+
+                <p>Riwayat perubahan stok akan muncul di sini.</p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML=riwayat.map(r=>{
+
+        const masuk=r.jenis==="Masuk";
+
+        const tanggal=new Date(r.tanggal)
+            .toLocaleString("id-ID",{
+                dateStyle:"medium",
+                timeStyle:"short"
+            });
+
+
+        return `
+
+        <div class="transaction">
+
+            <div class="trans-icon ${masuk ? "trans-in":"trans-out"}">
+
+                ${masuk ? "↓":"↑"}
+
+            </div>
+
+
+            <div class="trans-info">
+
+                <strong>${escapeHTML(r.barang)}</strong>
+
+                <small>
+                    ${escapeHTML(r.kode)} • ${tanggal}
+                </small>
+
+            </div>
+
+
+            <div
+                class="trans-amount"
+                style="color:${masuk ? "#00a77c":"#ef476f"}">
+
+                ${masuk ? "+":"-"}${r.jumlah}
+
+            </div>
+
+        </div>
+
+        `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function updateDashboard(){
+
+    const totalBarang=barang.length;
+
+    const totalStok=
+        barang.reduce(
+            (sum,b)=>sum+Number(b.stok),
+            0
+        );
+
+    const totalNilai=
+        barang.reduce(
+            (sum,b)=>sum+(Number(b.harga)*Number(b.stok)),
+            0
+        );
+
+    const rendah=
+        barang.filter(
+            b=>b.stok<=b.minimum
+        );
+
+
+    document.getElementById("totalBarang")
+        .textContent=totalBarang;
+
+    document.getElementById("totalStok")
+        .textContent=totalStok;
+
+    document.getElementById("totalNilai")
+        .textContent=rupiah(totalNilai);
+
+    document.getElementById("stokMenipis")
+        .textContent=rendah.length;
+
+
+    tampilkanBarangTerbaru();
+
+    tampilkanPeringatan();
+
+}
+
+
+/* =========================
+   BARANG TERBARU
+========================= */
+
+function tampilkanBarangTerbaru(){
+
+    const container=
+        document.getElementById("barangTerbaru");
+
+
+    const terbaru=[
+        ...barang
+    ].sort(
+        (a,b)=>
+            new Date(b.dibuat)-new Date(a.dibuat)
+    ).slice(0,5);
+
+
+    if(!terbaru.length){
+
+        container.innerHTML=`
+
+            <div class="empty">
+
+                <div class="empty-icon">📦</div>
+
+                <h3>Belum ada barang</h3>
+
+                <p>Data barang kamu akan tampil di sini.</p>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML=terbaru.map(b=>{
+
+        const low=b.stok<=b.minimum;
+
+
+        return `
+
+        <div class="product">
+
+            <div class="product-icon">
+                📦
+            </div>
+
+
+            <div class="product-info">
+
+                <strong>${escapeHTML(b.nama)}</strong>
+
+                <small>
+                    ${escapeHTML(b.kategori)}
+                </small>
+
+            </div>
+
+
+            <div class="stock ${low ? "low":"ok"}">
+
+                ${b.stok} unit
+
+            </div>
+
+        </div>
+
+        `;
+
+    }).join("");
+
+}
+
+
+/* =========================
+   PERINGATAN
+========================= */
+
+function tampilkanPeringatan(){
+
+    const container=
+        document.getElementById("peringatan");
+
+
+    const rendah=
+        barang.filter(
+            b=>b.stok<=b.minimum
+        );
+
+
+    if(!rendah.length){
+
+        container.innerHTML=`
+
+            <div class="warning" style="background:#eafbf6;border-color:#c7f5e8">
+
+                <div class="warning-icon">✅</div>
+
+                <div>
+
+                    <strong>Semua aman</strong>
+
+                    <p style="color:#18896d">
+                        Tidak ada stok yang menipis.
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+        return;
+    }
+
+
+    container.innerHTML=rendah.slice(0,5).map(b=>`
+
+        <div class="warning">
+
+            <div class="warning-icon">⚠️</div>
+
+            <div>
+
+                <strong>${escapeHTML(b.nama)}</strong>
+
+                <p>
+                    Tinggal ${b.stok} unit.
+                    Minimum ${b.minimum}.
+                </p>
+
+            </div>
+
+        </div>
+
+    `).join("");
+
+}
+
+
+/* =========================
+   BACKUP
+========================= */
+
+function backupData(){
+
+    const data={
+        barang,
+        riwayat,
+        backupTanggal:new Date().toISOString()
+    };
+
+
+    const blob=new Blob(
+        [JSON.stringify(data,null,2)],
+        {type:"application/json"}
+    );
+
+
+    const url=URL.createObjectURL(blob);
+
+    const a=document.createElement("a");
+
+    a.href=url;
+
+    a.download=
+        "backup-inventarisku-"+Date.now()+".json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    toast("Backup berhasil dibuat.");
+
+}
+
+
+/* =========================
+   IMPORT
+========================= */
+
+function importData(event){
+
+    const file=event.target.files[0];
+
+    if(!file)return;
+
+
+    const reader=new FileReader();
+
+
+    reader.onload=function(e){
+
+        try{
+
+            const data=JSON.parse(e.target.result);
+
+
+            if(!Array.isArray(data.barang)){
+
+                throw new Error();
+
+            }
+
+
+            barang=data.barang;
+
+            riwayat=
+                Array.isArray(data.riwayat)
+                ? data.riwayat
+                : [];
+
+
+            simpanSemuaData();
+
+            updateKategori();
+
+            tampilkanBarang();
+
+            tampilkanRiwayat();
+
+            updateDashboard();
+
+            toast("Data berhasil diimport.");
+
+        }catch{
+
+            toast("File backup tidak valid.");
+
+        }
+
+    };
+
+
+    reader.readAsText(file);
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetData(){
+
+    if(!confirm(
+        "Yakin ingin menghapus seluruh data?"
+    )){
+        return;
+    }
+
+
+    barang=[];
+
+    riwayat=[];
+
+    simpanSemuaData();
+
+    tampilkanBarang();
+
+    tampilkanRiwayat();
+
+    updateDashboard();
+
+    updateKategori();
+
+    toast("Semua data telah dihapus.");
+
+}
+
+
+/* =========================
+   DARK MODE
+========================= */
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark");
+
+    const aktif=
+        document.body.classList.contains("dark");
+
+
+    localStorage.setItem(
+        "darkMode",
+        aktif ? "1":"0"
+    );
+
+
+    document.getElementById("darkSwitch")
+        .classList.toggle("active",aktif);
+
+}
+
+
+function loadDarkMode(){
+
+    const aktif=
+        localStorage.getItem("darkMode")==="1";
+
+
+    if(aktif){
+
+        document.body.classList.add("dark");
+
+    }
+
+
+    document.getElementById("darkSwitch")
+        .classList.toggle("active",aktif);
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+loadDarkMode();
+
+updateKategori();
+
+tampilkanBarang();
+
+tampilkanRiwayat();
+
+updateDashboard();
+
+</script>
+
+</body>
+</html>
